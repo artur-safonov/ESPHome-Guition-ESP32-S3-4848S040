@@ -1,0 +1,536 @@
+# ╔══════════════════════════════════════════════════════════════════════════╗
+# ║  Routine Controller UI layer                                             ║
+# ║  Lights, Devices, Music, scenes and the bottom navigation are written    ║
+# ║  in C++ (Guition-ESP32/rc/*.h). This package wires them to Home          ║
+# ║  Assistant: fonts, service calls, Music Assistant search and library.    ║
+# ║  Which entities to show comes from rc_home.yaml: tools/gen_rc.py turns   ║
+# ║  it into rc/rc_config.h and widgets/rc_entities.yaml (state updates).    ║
+# ╚══════════════════════════════════════════════════════════════════════════╝
+
+font:
+  - file: "Guition-ESP32/fonts/Nunito-SemiBold.ttf"
+    id: nunito_13
+    size: 13
+    bpp: 4
+    glyphsets: [GF_Latin_Core, GF_Cyrillic_Core]
+  - file: "Guition-ESP32/fonts/Nunito-SemiBold.ttf"
+    id: nunito_24
+    size: 24
+    bpp: 4
+    glyphsets: [GF_Latin_Core, GF_Cyrillic_Core]
+  - file: "Guition-ESP32/fonts/Nunito-SemiBold.ttf"
+    id: rc_kb
+    size: 18
+    bpp: 4
+    glyphsets: [GF_Latin_Core, GF_Cyrillic_Core]
+    extras:
+      - file: "Guition-ESP32/fonts/materialdesignicons-webfont.ttf"
+        glyphs: ["\U000F006E", "\U000F0349"]
+  - file: "Guition-ESP32/fonts/materialdesignicons-webfont.ttf"
+    id: rc_i20
+    size: 20
+    bpp: 4
+    glyphs:
+      - "\U000F001B"
+      - "\U000F0025"
+      - "\U000F0045"
+      - "\U000F005D"
+      - "\U000F0068"
+      - "\U000F0079"
+      - "\U000F00AC"
+      - "\U000F00E2"
+      - "\U000F012C"
+      - "\U000F0140"
+      - "\U000F0141"
+      - "\U000F0142"
+      - "\U000F0210"
+      - "\U000F0238"
+      - "\U000F02DC"
+      - "\U000F032A"
+      - "\U000F0335"
+      - "\U000F0349"
+      - "\U000F0374"
+      - "\U000F0388"
+      - "\U000F03E4"
+      - "\U000F040A"
+      - "\U000F0415"
+      - "\U000F0425"
+      - "\U000F0493"
+      - "\U000F04AD"
+      - "\U000F04AE"
+      - "\U000F04C3"
+      - "\U000F04C9"
+      - "\U000F04DB"
+      - "\U000F0502"
+      - "\U000F050F"
+      - "\U000F051B"
+      - "\U000F057E"
+      - "\U000F057F"
+      - "\U000F058C"
+      - "\U000F059C"
+      - "\U000F05FA"
+      - "\U000F062E"
+      - "\U000F065A"
+      - "\U000F0665"
+      - "\U000F06E9"
+      - "\U000F070D"
+      - "\U000F0717"
+      - "\U000F071F"
+      - "\U000F0748"
+      - "\U000F075A"
+      - "\U000F0769"
+      - "\U000F07D1"
+      - "\U000F0803"
+      - "\U000F08BB"
+      - "\U000F08D0"
+      - "\U000F095F"
+      - "\U000F0A70"
+      - "\U000F0AAC"
+      - "\U000F0B7C"
+      - "\U000F0BA7"
+      - "\U000F0CB8"
+      - "\U000F0CD3"
+      - "\U000F0F56"
+      - "\U000F0FB0"
+      - "\U000F1051"
+      - "\U000F111C"
+      - "\U000F1253"
+      - "\U000F1255"
+      - "\U000F1319"
+      - "\U000F1356"
+      - "\U000F1576"
+      - "\U000F18DD"
+      - "\U000F1958"
+      - "\U000F1A6B"
+      - "\U000F1A6C"
+  - file: "Guition-ESP32/fonts/materialdesignicons-webfont.ttf"
+    id: rc_i24
+    size: 24
+    bpp: 4
+    glyphs:
+      - "\U000F001B"
+      - "\U000F0025"
+      - "\U000F0045"
+      - "\U000F005D"
+      - "\U000F0068"
+      - "\U000F0079"
+      - "\U000F00AC"
+      - "\U000F00E2"
+      - "\U000F012C"
+      - "\U000F0140"
+      - "\U000F0141"
+      - "\U000F0142"
+      - "\U000F0210"
+      - "\U000F0238"
+      - "\U000F02DC"
+      - "\U000F032A"
+      - "\U000F0335"
+      - "\U000F0349"
+      - "\U000F0374"
+      - "\U000F0388"
+      - "\U000F03E4"
+      - "\U000F040A"
+      - "\U000F0415"
+      - "\U000F0425"
+      - "\U000F0493"
+      - "\U000F04AD"
+      - "\U000F04AE"
+      - "\U000F04C3"
+      - "\U000F04C9"
+      - "\U000F04DB"
+      - "\U000F0502"
+      - "\U000F050F"
+      - "\U000F051B"
+      - "\U000F057E"
+      - "\U000F057F"
+      - "\U000F058C"
+      - "\U000F059C"
+      - "\U000F05FA"
+      - "\U000F062E"
+      - "\U000F065A"
+      - "\U000F0665"
+      - "\U000F06E9"
+      - "\U000F070D"
+      - "\U000F0717"
+      - "\U000F071F"
+      - "\U000F0748"
+      - "\U000F075A"
+      - "\U000F0769"
+      - "\U000F07D1"
+      - "\U000F0803"
+      - "\U000F08BB"
+      - "\U000F08D0"
+      - "\U000F095F"
+      - "\U000F0A70"
+      - "\U000F0AAC"
+      - "\U000F0B7C"
+      - "\U000F0BA7"
+      - "\U000F0CB8"
+      - "\U000F0CD3"
+      - "\U000F0F56"
+      - "\U000F0FB0"
+      - "\U000F1051"
+      - "\U000F111C"
+      - "\U000F1253"
+      - "\U000F1255"
+      - "\U000F1319"
+      - "\U000F1356"
+      - "\U000F1576"
+      - "\U000F18DD"
+      - "\U000F1958"
+      - "\U000F1A6B"
+      - "\U000F1A6C"
+  - file: "Guition-ESP32/fonts/materialdesignicons-webfont.ttf"
+    id: rc_i28
+    size: 28
+    bpp: 4
+    glyphs:
+      - "\U000F001B"
+      - "\U000F0025"
+      - "\U000F0045"
+      - "\U000F005D"
+      - "\U000F0068"
+      - "\U000F0079"
+      - "\U000F00AC"
+      - "\U000F00E2"
+      - "\U000F012C"
+      - "\U000F0140"
+      - "\U000F0141"
+      - "\U000F0142"
+      - "\U000F0210"
+      - "\U000F0238"
+      - "\U000F02DC"
+      - "\U000F032A"
+      - "\U000F0335"
+      - "\U000F0349"
+      - "\U000F0374"
+      - "\U000F0388"
+      - "\U000F03E4"
+      - "\U000F040A"
+      - "\U000F0415"
+      - "\U000F0425"
+      - "\U000F0493"
+      - "\U000F04AD"
+      - "\U000F04AE"
+      - "\U000F04C3"
+      - "\U000F04C9"
+      - "\U000F04DB"
+      - "\U000F0502"
+      - "\U000F050F"
+      - "\U000F051B"
+      - "\U000F057E"
+      - "\U000F057F"
+      - "\U000F058C"
+      - "\U000F059C"
+      - "\U000F05FA"
+      - "\U000F062E"
+      - "\U000F065A"
+      - "\U000F0665"
+      - "\U000F06E9"
+      - "\U000F070D"
+      - "\U000F0717"
+      - "\U000F071F"
+      - "\U000F0748"
+      - "\U000F075A"
+      - "\U000F0769"
+      - "\U000F07D1"
+      - "\U000F0803"
+      - "\U000F08BB"
+      - "\U000F08D0"
+      - "\U000F095F"
+      - "\U000F0A70"
+      - "\U000F0AAC"
+      - "\U000F0B7C"
+      - "\U000F0BA7"
+      - "\U000F0CB8"
+      - "\U000F0CD3"
+      - "\U000F0F56"
+      - "\U000F0FB0"
+      - "\U000F1051"
+      - "\U000F111C"
+      - "\U000F1253"
+      - "\U000F1255"
+      - "\U000F1319"
+      - "\U000F1356"
+      - "\U000F1576"
+      - "\U000F18DD"
+      - "\U000F1958"
+      - "\U000F1A6B"
+      - "\U000F1A6C"
+  - file: "Guition-ESP32/fonts/materialdesignicons-webfont.ttf"
+    id: rc_i40
+    size: 40
+    bpp: 4
+    glyphs:
+      - "\U000F001B"
+      - "\U000F0025"
+      - "\U000F0045"
+      - "\U000F005D"
+      - "\U000F0068"
+      - "\U000F0079"
+      - "\U000F00AC"
+      - "\U000F00E2"
+      - "\U000F012C"
+      - "\U000F0140"
+      - "\U000F0141"
+      - "\U000F0142"
+      - "\U000F0210"
+      - "\U000F0238"
+      - "\U000F02DC"
+      - "\U000F032A"
+      - "\U000F0335"
+      - "\U000F0349"
+      - "\U000F0374"
+      - "\U000F0388"
+      - "\U000F03E4"
+      - "\U000F040A"
+      - "\U000F0415"
+      - "\U000F0425"
+      - "\U000F0493"
+      - "\U000F04AD"
+      - "\U000F04AE"
+      - "\U000F04C3"
+      - "\U000F04C9"
+      - "\U000F04DB"
+      - "\U000F0502"
+      - "\U000F050F"
+      - "\U000F051B"
+      - "\U000F057E"
+      - "\U000F057F"
+      - "\U000F058C"
+      - "\U000F059C"
+      - "\U000F05FA"
+      - "\U000F062E"
+      - "\U000F065A"
+      - "\U000F0665"
+      - "\U000F06E9"
+      - "\U000F070D"
+      - "\U000F0717"
+      - "\U000F071F"
+      - "\U000F0748"
+      - "\U000F075A"
+      - "\U000F0769"
+      - "\U000F07D1"
+      - "\U000F0803"
+      - "\U000F08BB"
+      - "\U000F08D0"
+      - "\U000F095F"
+      - "\U000F0A70"
+      - "\U000F0AAC"
+      - "\U000F0B7C"
+      - "\U000F0BA7"
+      - "\U000F0CB8"
+      - "\U000F0CD3"
+      - "\U000F0F56"
+      - "\U000F0FB0"
+      - "\U000F1051"
+      - "\U000F111C"
+      - "\U000F1253"
+      - "\U000F1255"
+      - "\U000F1319"
+      - "\U000F1356"
+      - "\U000F1576"
+      - "\U000F18DD"
+      - "\U000F1958"
+      - "\U000F1A6B"
+      - "\U000F1A6C"
+
+online_image:
+  - id: rc_art
+    url: "${ha_server}/local/rc-placeholder.jpg"
+    format: JPEG
+    type: RGB565
+    resize: 160x160
+    update_interval: never
+    on_download_finished:
+      - lambda: rc::music_art_ready();
+
+lvgl:
+  top_layer:
+    widgets:
+      # Hidden carrier: exposes fonts to C++ and makes ESPHome compile the LVGL
+      # widgets that are only created from C++ (arc, slider, textarea, keyboard).
+      - obj:
+          id: rc_carrier
+          hidden: true
+          width: 10
+          height: 10
+          widgets:
+            - label: {id: fc_t13, text_font: nunito_13, text: " "}
+            - label: {id: fc_t16, text_font: nunito_16, text: " "}
+            - label: {id: fc_t18, text_font: nunito_18, text: " "}
+            - label: {id: fc_t20, text_font: nunito_20, text: " "}
+            - label: {id: fc_t24, text_font: nunito_24, text: " "}
+            - label: {id: fc_t30, text_font: nunito_30, text: " "}
+            - label: {id: fc_t48, text_font: nunito_48, text: " "}
+            - label: {id: fc_i20, text_font: rc_i20, text: " "}
+            - label: {id: fc_i24, text_font: rc_i24, text: " "}
+            - label: {id: fc_i28, text_font: rc_i28, text: " "}
+            - label: {id: fc_i40, text_font: rc_i40, text: " "}
+            - label: {id: fc_kb, text_font: rc_kb, text: " "}
+            - arc: {id: rc_w_arc}
+            - slider: {id: rc_w_slider}
+            - bar: {id: rc_w_bar}
+            - textarea: {id: rc_w_ta}
+            - keyboard: {id: rc_w_kb, textarea: rc_w_ta}
+
+script:
+  # Every UI action goes through HA script.rc_call (service + JSON data).
+  - id: rc_ha
+    mode: queued
+    max_runs: 20
+    parameters:
+      svc: string
+      data: string
+    then:
+      - homeassistant.action:
+          action: script.rc_call
+          data:
+            service: !lambda return svc;
+            data: !lambda return data;
+  - id: rc_art_set
+    mode: restart
+    parameters:
+      url: string
+    then:
+      - online_image.set_url:
+          id: rc_art
+          url: !lambda return url;
+      - component.update: rc_art
+  - id: rc_ma_search
+    mode: restart
+    parameters:
+      q: string
+    then:
+      - homeassistant.action:
+          action: music_assistant.search
+          data:
+            config_entry_id: ${ma_entry_id}
+            name: !lambda return q;
+            limit: "3"
+          capture_response: true
+          response_template: |-
+            {%- set ns = namespace(o=[]) -%}
+            {%- for key, n in [('artists', 2), ('tracks', 3), ('albums', 2), ('playlists', 2)] -%}
+            {%- for x in (response[key] if key in response else [])[:n] -%}
+            {%- set ns.o = ns.o + [{'t': x.name, 's': (x.artists | default([]) | map(attribute='name') | join(', ')), 'u': x.uri, 'k': x.media_type}] -%}
+            {%- endfor -%}
+            {%- endfor -%}
+            {{ {'i': ns.o[:8]} | tojson }}
+          on_success:
+            - lambda: |-
+                // HA wraps the rendered response_template in {"response": ...}.
+                JsonObjectConst root = response["response"].is<JsonObjectConst>() ? response["response"].as<JsonObjectConst>() : response;
+                std::vector<rc::Item> v;
+                for (JsonObjectConst x : root["i"].as<JsonArrayConst>())
+                  v.push_back({x["t"] | "", x["s"] | "", x["u"] | "", x["k"] | ""});
+                rc::search_result(v);
+          on_error:
+            - lambda: rc::search_error(error);
+  - id: rc_ma_library
+    mode: restart
+    then:
+      - homeassistant.action:
+          action: music_assistant.get_library
+          data:
+            config_entry_id: ${ma_entry_id}
+            media_type: playlist
+            order_by: last_played_desc
+            limit: "12"
+          capture_response: true
+          response_template: |-
+            {%- set ns = namespace(o=[]) -%}
+            {%- for x in response['items'] if (x.name | trim | length) > 1 -%}
+            {%- set ns.o = ns.o + [{'t': x.name | trim, 's': '', 'u': x.uri, 'k': x.media_type}] -%}
+            {%- endfor -%}
+            {{ {'i': ns.o[:6]} | tojson }}
+          on_success:
+            - lambda: |-
+                // HA wraps the rendered response_template in {"response": ...}.
+                JsonObjectConst root = response["response"].is<JsonObjectConst>() ? response["response"].as<JsonObjectConst>() : response;
+                std::vector<rc::Item> v;
+                for (JsonObjectConst x : root["i"].as<JsonArrayConst>())
+                  v.push_back({x["t"] | "", x["s"] | "", x["u"] | "", x["k"] | ""});
+                rc::library_result(v);
+          on_error:
+            - lambda: rc::library_error(error);
+
+api:
+  actions:
+    # Test / automation hooks.
+    - action: rc_show
+      variables:
+        page: string
+      then:
+        - lambda: rc::show(page);
+    - action: rc_click
+      variables:
+        name: string
+      then:
+        - lambda: 'if (!rc::click(name)) ESP_LOGW("rc", "no widget %s", name.c_str());'
+    - action: rc_theme
+      variables:
+        theme: int
+      then:
+        - lambda: 'id(current_theme) = theme;'
+        - script.execute: apply_theme
+    - action: rc_lang
+      variables:
+        lang: int
+      then:
+        - lambda: 'id(current_language) = lang;'
+        - lvgl.dropdown.update:
+            id: language_dropdown
+            selected_index: !lambda return lang;
+        - lvgl.image.update:
+            id: flag_language_image
+            src: !lambda return id(flag_icon_mapping_image)[lang];
+        - script.execute: apply_ui_translations
+        - script.execute: time_update
+    - action: rc_bench
+      then:
+        - lambda: rc::bench();
+    - action: rc_dry_run
+      variables:
+        enable: bool
+      then:
+        - lambda: |-
+            rc::H.dry_run = enable;
+            if (!enable) {  // forget pretend commands so the UI shows only real state
+              for (auto it = rc::S.begin(); it != rc::S.end();) it = it->first.rfind("rc.last|", 0) == 0 ? rc::S.erase(it) : std::next(it);
+              rc::g_dirty = true;
+            }
+            ESP_LOGW("rc", "dry run %d", enable);
+
+esphome:
+  on_boot:
+    priority: -200
+    then:
+      - lambda: |-
+          auto f = [](lv_obj_t *l) { return lv_obj_get_style_text_font(l, LV_PART_MAIN); };
+          rc::F.t13 = f(id(fc_t13)); rc::F.t16 = f(id(fc_t16)); rc::F.t18 = f(id(fc_t18));
+          rc::F.t20 = f(id(fc_t20)); rc::F.t24 = f(id(fc_t24)); rc::F.t30 = f(id(fc_t30));
+          rc::F.t48 = f(id(fc_t48)); rc::F.i20 = f(id(fc_i20)); rc::F.i24 = f(id(fc_i24));
+          rc::F.i28 = f(id(fc_i28)); rc::F.i40 = f(id(fc_i40)); rc::F.kb = f(id(fc_kb));
+          rc::g_lang = &id(current_language);
+          rc::H.ha_url = "${ha_server}";
+          rc::H.home = id(home_page)->obj;
+          rc::H.settings = id(settings_page)->obj;
+          rc::H.nav = id(menu_controls_main);
+          rc::H.get_art = []() { return id(rc_art)->get_lv_image_dsc(); };
+          rc::H.screensaver = []() { return (bool) id(screensaver_active); };
+          rc::H.wake = []() {
+            lv_display_trigger_activity(nullptr);
+            if (!id(screensaver_active)) return;
+            id(screensaver_active) = false;
+            lv_obj_add_flag(id(screensaver_widget), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_remove_flag(id(menu_controls_main), LV_OBJ_FLAG_HIDDEN);
+            auto call = id(display_backlight).turn_on();
+            call.set_brightness(1.0f);
+            call.perform();
+          };
+          rc::H.call = [](const std::string &s, const std::string &d) { id(rc_ha)->execute(s, d); };
+          rc::H.search = [](const std::string &q) { id(rc_ma_search)->execute(q); };
+          rc::H.library = []() { id(rc_ma_library)->execute(); };
+          rc::H.set_art = [](const std::string &u) { id(rc_art_set)->execute(u); };
+          rc::init();

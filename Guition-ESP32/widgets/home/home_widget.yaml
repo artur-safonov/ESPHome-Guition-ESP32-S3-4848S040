@@ -81,7 +81,11 @@ sensor:
             text: !lambda |-
               static char buf[10];
               float t = id(weather_temp).state;
-              if (id(temp_unit) == 1) t = (t - 32.0f) * 5.0f / 9.0f;
+              // Convert only when the display unit differs from the unit HA reports.
+              bool src_f = id(weather_temp_unit).state.find('F') != std::string::npos;
+              bool want_c = id(temp_unit) == 1;
+              if (src_f && want_c) t = (t - 32.0f) * 5.0f / 9.0f;
+              if (!src_f && !want_c) t = t * 9.0f / 5.0f + 32.0f;
               snprintf(buf, sizeof(buf), "%.0f°", t);
               return buf;
 
@@ -92,6 +96,15 @@ sensor:
 
 
 text_sensor:
+  # Unit HA uses for the weather entity (°C / °F)
+  - platform: homeassistant
+    id: weather_temp_unit
+    entity_id: "${weather_entity}"
+    attribute: temperature_unit
+    on_value:
+      - lambda: |-
+          if (!std::isnan(id(weather_temp).state)) id(weather_temp).publish_state(id(weather_temp).state);
+
   # Person presence sensors
   - platform: homeassistant
     id: person_state_1
@@ -277,7 +290,7 @@ text_sensor:
 lvgl:
   pages:
     - id: home_page
-      bg_color: color_slate_blue_gray 
+      bg_color: color_bg 
       widgets:
 
         # Paris theme background — hidden by default, shown via apply_theme script
@@ -327,12 +340,12 @@ lvgl:
             pad_bottom: 0
             pad_left: 12
             pad_right: 8
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             layout:
               type: FLEX
               flex_flow: ROW
@@ -370,8 +383,6 @@ lvgl:
                   on_press:
                     - lvgl.page.show:
                         id: people_page
-                        animation: OUT_RIGHT
-                        time: 300ms
                   widgets:
                     - label:
                         id: person_indicator_1
@@ -412,33 +423,6 @@ lvgl:
                     flex_align_track: CENTER
                   widgets:
 
-                    # Alarm panel status — color/icon match alarm state; tap to open alarm panel
-                    - label:
-                        id: alarm_panel_status
-                        text: "${shield_arming_icon}"
-                        text_color: color_steel_blue
-                        text_font: mdi_icons_24
-                        clickable: true
-                        on_click:
-                          - lvgl.page.show:
-                              id: alarm_panel_page
-                              animation: OUT_RIGHT
-                              time: 300ms
-
-                    # HVAC status — color: heating=orange, cooling=sky-blue, off=gray; tap to open HVAC
-                    - label:
-                        id: hvac_status
-                        pad_left: 16
-                        text: "${hvac_icon}"
-                        text_color: color_steel_blue
-                        text_font: icons_24
-                        clickable: true
-                        on_click:
-                          - lvgl.page.show:
-                              id: hvac_page
-                              animation: OUT_RIGHT
-                              time: 300ms
-
                     # Home Assistant status
                     - label:
                         id: ha_status
@@ -458,24 +442,22 @@ lvgl:
                         on_click:
                           - lvgl.page.show:
                               id: system_info_page
-                              animation: OUT_RIGHT
-                              time: 300ms
 
         # time
         - obj:
             id: home_bg_weather_time
             x: 20
-            y: 80
+            y: 72
             width: 220
-            height: 110
+            height: 100
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
 
               - label:
@@ -563,17 +545,17 @@ lvgl:
         - obj:
             id: home_bg_weather
             x: 250
-            y: 80
+            y: 72
             width: 210
-            height: 110
+            height: 100
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             clickable: true
             on_press:
               then:
@@ -581,8 +563,6 @@ lvgl:
                 - script.execute: fetch_weather_forecast
                 - lvgl.page.show:
                     id: weather_forecast_page
-                    animation: OUT_RIGHT
-                    time: 300ms
             widgets:
               - image:
                   id: weather_sunny_image
@@ -697,21 +677,22 @@ lvgl:
                   long_mode: CLIP
                   text: " "
 
-        # calendar events — 3 upcoming events
+        # calendar events — hidden: no calendar is configured; scenes take this slot
         - obj:
             id: home_bg_calendar
+            hidden: true
             x: 20
             y: 200
             width: 440
             height: 175
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
 
               # header: calendar icon + label
@@ -909,8 +890,8 @@ script:
                   static char date_buf[32];
                   auto now = id(homeassistant_time).now();
                   int lang = id(current_language);
-                  if (lang < 0 || lang > 8) lang = 7;
-                  static const char* days[9][7] = {
+                  if (lang < 0 || lang > 9) lang = 7;
+                  static const char* days[10][7] = {
                     {"So","Mo","Di","Mi","Do","Fr","Sa"},
                     {"dom","lun","mar","mié","jue","vie","sáb"},
                     {"dim","lun","mar","mer","jeu","ven","sam"},
@@ -920,8 +901,11 @@ script:
                     {"вс","пн","вт","ср","чт","пт","сб"},
                     {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"},
                     {"ndz","pon","wt","śr","czw","pt","sob"},
+                    {"нд","пн","вт","ср","чт","пт","сб"},
                   };
-                  snprintf(date_buf, sizeof(date_buf), "%s, %d/%02d/%04d", days[lang][(now.day_of_week)-1], now.month, now.day_of_month, now.year);
+                  if (lang == 6 || lang == 9 || lang == 3 || lang == 7) rc::short_date(date_buf, sizeof(date_buf), lang, now.day_of_week, now.day_of_month, now.month);
+                  else
+                    snprintf(date_buf, sizeof(date_buf), "%s, %d.%02d.%04d", days[lang][(now.day_of_week)-1], now.day_of_month, now.month, now.year);
                   return date_buf;
 
   - id: notification_dismiss
@@ -982,11 +966,11 @@ script:
             - lvgl.label.update:
                 id: screensaver_date
                 text: !lambda |-
-                  static char buf[40];
+                  static char buf[72];
                   auto now = id(homeassistant_time).now();
                   int lang = id(current_language);
-                  if (lang < 0 || lang > 8) lang = 7;
-                  static const char* days[9][7] = {
+                  if (lang < 0 || lang > 9) lang = 7;
+                  static const char* days[10][7] = {
                     {"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"},
                     {"domingo","lunes","martes","miércoles","jueves","viernes","sábado"},
                     {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"},
@@ -996,8 +980,9 @@ script:
                     {"воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"},
                     {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"},
                     {"niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"},
+                    {"неділя","понеділок","вівторок","середа","четвер","п'ятниця","субота"},
                   };
-                  static const char* months[9][12] = {
+                  static const char* months[10][12] = {
                     {"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"},
                     {"enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"},
                     {"janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"},
@@ -1007,8 +992,10 @@ script:
                     {"январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"},
                     {"January","February","March","April","May","June","July","August","September","October","November","December"},
                     {"styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"},
+                    {"січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"},
                   };
-                  snprintf(buf, sizeof(buf), "%s, %s %d, %d", days[lang][now.day_of_week - 1], months[lang][now.month - 1], now.day_of_month, now.year);
+                  if (lang == 6 || lang == 9 || lang == 3 || lang == 7) rc::long_date(buf, sizeof(buf), lang, now.day_of_week, now.day_of_month, now.month);
+                  else snprintf(buf, sizeof(buf), "%s, %s %d, %d", days[lang][now.day_of_week - 1], months[lang][now.month - 1], now.day_of_month, now.year);
                   return buf;
           else:
             # Not style 0 — digital is never needed, hide it
@@ -1070,11 +1057,11 @@ script:
       - lvgl.label.update:
           id: ss_flip_date
           text: !lambda |-
-            static char buf[40];
+            static char buf[72];
             auto now = id(homeassistant_time).now();
             int lang = id(current_language);
-            if (lang < 0 || lang > 8) lang = 7;
-            static const char* days[9][7] = {
+            if (lang < 0 || lang > 9) lang = 7;
+            static const char* days[10][7] = {
               {"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"},
               {"domingo","lunes","martes","miércoles","jueves","viernes","sábado"},
               {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"},
@@ -1084,8 +1071,9 @@ script:
               {"воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"},
               {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"},
               {"niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"},
+              {"неділя","понеділок","вівторок","середа","четвер","п'ятниця","субота"},
             };
-            static const char* months[9][12] = {
+            static const char* months[10][12] = {
               {"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"},
               {"enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"},
               {"janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"},
@@ -1095,8 +1083,10 @@ script:
               {"январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"},
               {"January","February","March","April","May","June","July","August","September","October","November","December"},
               {"styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"},
+              {"січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"},
             };
-            snprintf(buf, sizeof(buf), "%s, %s %d, %d", days[lang][now.day_of_week - 1], months[lang][now.month - 1], now.day_of_month, now.year);
+            if (lang == 6 || lang == 9 || lang == 3 || lang == 7) rc::long_date(buf, sizeof(buf), lang, now.day_of_week, now.day_of_month, now.month);
+                  else snprintf(buf, sizeof(buf), "%s, %s %d, %d", days[lang][now.day_of_week - 1], months[lang][now.month - 1], now.day_of_month, now.year);
             return buf;
 
   - id: screensaver_update_calendar_events
@@ -1108,8 +1098,8 @@ script:
             std::string e = id(cal_end_1).state;
             if (s.empty()) return std::string(" ");
             int lang = id(current_language);
-            if (lang < 0 || lang > 8) lang = 7;
-            static const char* days[9][7] = {
+            if (lang < 0 || lang > 9) lang = 7;
+            static const char* days[10][7] = {
               {"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"},
               {"domingo","lunes","martes","miércoles","jueves","viernes","sábado"},
               {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"},
@@ -1119,8 +1109,9 @@ script:
               {"воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"},
               {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"},
               {"niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"},
+              {"неділя","понеділок","вівторок","середа","четвер","п'ятниця","субота"},
             };
-            static const char* months[9][12] = {
+            static const char* months[10][12] = {
               {"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"},
               {"enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"},
               {"janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"},
@@ -1130,6 +1121,7 @@ script:
               {"январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"},
               {"January","February","March","April","May","June","July","August","September","October","November","December"},
               {"styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"},
+              {"січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"},
             };
             struct tm ts = {};
             bool all_day = (s.size() <= 10);
@@ -1175,8 +1167,8 @@ script:
             std::string e = id(cal_end_2).state;
             if (s.empty()) return std::string(" ");
             int lang = id(current_language);
-            if (lang < 0 || lang > 8) lang = 7;
-            static const char* days[9][7] = {
+            if (lang < 0 || lang > 9) lang = 7;
+            static const char* days[10][7] = {
               {"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"},
               {"domingo","lunes","martes","miércoles","jueves","viernes","sábado"},
               {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"},
@@ -1186,8 +1178,9 @@ script:
               {"воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"},
               {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"},
               {"niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"},
+              {"неділя","понеділок","вівторок","середа","четвер","п'ятниця","субота"},
             };
-            static const char* months[9][12] = {
+            static const char* months[10][12] = {
               {"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"},
               {"enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"},
               {"janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"},
@@ -1197,6 +1190,7 @@ script:
               {"январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"},
               {"January","February","March","April","May","June","July","August","September","October","November","December"},
               {"styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"},
+              {"січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"},
             };
             struct tm ts = {};
             bool all_day = (s.size() <= 10);
@@ -1242,8 +1236,8 @@ script:
             std::string e = id(cal_end_3).state;
             if (s.empty()) return std::string(" ");
             int lang = id(current_language);
-            if (lang < 0 || lang > 8) lang = 7;
-            static const char* days[9][7] = {
+            if (lang < 0 || lang > 9) lang = 7;
+            static const char* days[10][7] = {
               {"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"},
               {"domingo","lunes","martes","miércoles","jueves","viernes","sábado"},
               {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"},
@@ -1253,8 +1247,9 @@ script:
               {"воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"},
               {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"},
               {"niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"},
+              {"неділя","понеділок","вівторок","середа","четвер","п'ятниця","субота"},
             };
-            static const char* months[9][12] = {
+            static const char* months[10][12] = {
               {"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"},
               {"enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"},
               {"janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"},
@@ -1264,6 +1259,7 @@ script:
               {"январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"},
               {"January","February","March","April","May","June","July","August","September","October","November","December"},
               {"styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"},
+              {"січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"},
             };
             struct tm ts = {};
             bool all_day = (s.size() <= 10);
@@ -1312,6 +1308,20 @@ script:
 
           auto it = id(weather_translations).find(state);
           std::string translated_state = (it != id(weather_translations).end()) ? it->second : state;
+          // Built-in Russian / Ukrainian names when HA provides no translation map.
+          int lg = id(current_language);
+          if (it == id(weather_translations).end() && (lg == 6 || lg == 9)) {
+            static const std::map<std::string, std::pair<const char*, const char*>> names = {
+              {"clear-night", {"Ясно", "Ясно"}}, {"cloudy", {"Облачно", "Хмарно"}}, {"exceptional", {"Опасно", "Небезпечно"}},
+              {"fog", {"Туман", "Туман"}}, {"hail", {"Град", "Град"}}, {"lightning", {"Гроза", "Гроза"}},
+              {"lightning-rainy", {"Гроза, дождь", "Гроза, дощ"}}, {"partlycloudy", {"Переменно", "Мінлива хмарність"}},
+              {"pouring", {"Ливень", "Злива"}}, {"rainy", {"Дождь", "Дощ"}}, {"snowy", {"Снег", "Сніг"}},
+              {"snowy-rainy", {"Мокрый снег", "Мокрий сніг"}}, {"sunny", {"Солнечно", "Сонячно"}},
+              {"windy", {"Ветрено", "Вітряно"}}, {"windy-variant", {"Ветрено", "Вітряно"}},
+            };
+            auto r = names.find(state);
+            if (r != names.end()) translated_state = lg == 6 ? r->second.first : r->second.second;
+          }
 
           // Title-case: capitalise the first letter of every word
           bool cap_next = true;
@@ -1392,8 +1402,8 @@ script:
             return r != nullptr;
           };
           int lang = id(current_language);
-          if (lang < 0 || lang > 8) lang = 7;
-          static const char* days[9][7] = {
+          if (lang < 0 || lang > 9) lang = 7;
+          static const char* days[10][7] = {
             {"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"},
             {"domingo","lunes","martes","miércoles","jueves","viernes","sábado"},
             {"dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"},
@@ -1403,8 +1413,9 @@ script:
             {"воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"},
             {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"},
             {"niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"},
+            {"неділя","понеділок","вівторок","середа","четвер","п'ятниця","субота"},
           };
-          static const char* months[9][12] = {
+          static const char* months[10][12] = {
             {"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"},
             {"enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"},
             {"janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"},
@@ -1414,6 +1425,7 @@ script:
             {"январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"},
             {"January","February","March","April","May","June","July","August","September","October","November","December"},
             {"styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"},
+            {"січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"},
           };
           struct CalEvent { std::string title, start, end_t; };
           std::vector<CalEvent> events = {
@@ -1543,29 +1555,13 @@ switch:
       return id(display_lock);
     turn_on_action:
       - lambda: 'id(display_lock) = true;' 
-      - lvgl.button.update: 
-          id: home_page_btn
-          clickable: false
-      - lvgl.button.update: 
-          id: lights_group_page_btn
-          clickable: false
-      - lvgl.button.update: 
-          id: devices_page_btn
-          clickable: false
-      - lvgl.button.update: 
-          id: settings_page_btn
-          clickable: false
+      - lambda: |-
+          lv_obj_t *nav = id(menu_controls_main);
+          for (uint32_t i = 0; i < lv_obj_get_child_count(nav); i++)
+            lv_obj_remove_flag(lv_obj_get_child(nav, i), LV_OBJ_FLAG_CLICKABLE);
     turn_off_action:
       - lambda: 'id(display_lock) = false;'
-      - lvgl.button.update:
-          id: home_page_btn
-          clickable: true
-      - lvgl.button.update:
-          id: lights_group_page_btn
-          clickable: true
-      - lvgl.button.update:
-          id: devices_page_btn
-          clickable: true
-      - lvgl.button.update:
-          id: settings_page_btn
-          clickable: true
+      - lambda: |-
+          lv_obj_t *nav = id(menu_controls_main);
+          for (uint32_t i = 1; i < lv_obj_get_child_count(nav); i++)
+            lv_obj_add_flag(lv_obj_get_child(nav, i), LV_OBJ_FLAG_CLICKABLE);

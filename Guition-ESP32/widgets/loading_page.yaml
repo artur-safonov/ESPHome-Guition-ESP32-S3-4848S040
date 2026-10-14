@@ -34,7 +34,7 @@ lvgl:
                 shadow_opa: TRANSP
                 border_opa: TRANSP
                 border_width: 0
-                radius: 10
+                radius: 18
                 widgets:
                   - label:
                       id: boot_homeassistant_label
@@ -65,7 +65,7 @@ lvgl:
                 shadow_opa: TRANSP
                 border_opa: TRANSP
                 border_width: 0
-                radius: 10
+                radius: 18
                 hidden: true
                 widgets:
                   - label:

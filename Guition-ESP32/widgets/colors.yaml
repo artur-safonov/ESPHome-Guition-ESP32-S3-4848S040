@@ -1,11 +1,20 @@
+# ── Core palette (Midnight) ───────────────────────────────────────────────────
+# Every surface is opaque: translucent layers force per-pixel blending on each
+# redraw, which was the main source of lag on the 480x480 RGB panel.
+- id: color_bg
+  hex: 0B0D11
+- id: color_card
+  hex: 171A21
+- id: color_card_hi
+  hex: 232833
 - id: color_sky_blue
-  hex: 3FA7F3
+  hex: 4C8DFF
 - id: color_slate_blue_gray
-  hex: 343645
+  hex: 262B36
 - id: color_steel_blue
-  hex: 606682
+  hex: 8A91A5
 - id: color_misty_blue
-  hex: 9BA2BC
+  hex: F1F3F7
 - id: color_black
   hex: 0d0d0d
 - id: color_dark_gray

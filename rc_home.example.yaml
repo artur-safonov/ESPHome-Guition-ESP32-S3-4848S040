@@ -1,0 +1,85 @@
+# Routine Controller home layout: what the Lights, Devices, Music and Home pages show.
+#
+#   1. Copy this file to rc_home.yaml (ignored by Git) and replace the entity ids with yours.
+#   2. Run: python tools/gen_rc.py
+#   3. Compile your display configuration as usual.
+#
+# Labels take one text, or a mapping with en / ru / uk (the UI languages that have C++
+# translations; others fall back to en). Icons are names from the ic namespace in
+# Guition-ESP32/rc/rc_core.h, colours are names from its palette (WARN, TEAL...) or #RRGGBB.
+
+# The two tabs on the Lights and Devices pages. Every light and device has room: 0 or 1.
+rooms:
+  - {en: Kitchen, ru: Кухня, uk: Кухня}
+  - {en: Living room, ru: Гостиная, uk: Вітальня}
+
+lights:
+  # A group tile switches several lights together; key is any unique name.
+  - key: kitchen_all
+    members: [light.kitchen_downlight_1, light.kitchen_downlight_2]
+    icon: CEILING_MULTI
+    room: 0
+    label: {en: Whole kitchen, ru: Вся кухня, uk: Уся кухня}
+  - {entity: light.kitchen_downlight_1, icon: SPOT, room: 0, label: Downlight 1}
+  - {entity: light.kitchen_downlight_2, icon: SPOT, room: 0, label: Downlight 2}
+  # features: brightness, color_temp, rgb (all three by default). [] = on/off only.
+  - {entity: light.living_room_ceiling, icon: CEILING, room: 1, label: {en: Ceiling, ru: Потолок, uk: Стеля}}
+  - {entity: light.floor_lamp, icon: LAMPS, room: 1, features: [brightness], label: {en: Floor lamp, ru: Торшер, uk: Торшер}}
+  - {entity: light.led_strip, icon: STRIP, room: 1, features: [brightness, rgb], label: {en: LED strip, ru: LED-лента, uk: LED-стрічка}}
+
+# Each device is optional: leave it out and its card disappears. Every device calls one
+# Home Assistant script (script:) with the variables listed in README-ROUTINE-CONTROLLER.md.
+devices:
+  kettle:
+    room: 0
+    power: switch.kettle_power
+    temperature: sensor.kettle_temperature
+    target_temperature: number.kettle_target_temperature
+    keep_warm: switch.kettle_keep_warm
+    status: sensor.kettle_status
+    script: script.kettle_heat
+  dishwasher:
+    room: 0
+    operation_state: sensor.dishwasher_state
+    program_progress: sensor.dishwasher_progress
+    script: script.dishwasher_control
+  vacuum:
+    room: 0
+    entity: vacuum.robot_vacuum
+    battery: sensor.robot_vacuum_battery
+    mop_type: select.robot_vacuum_mop_type
+    suction: select.robot_vacuum_suction
+    water_level: select.robot_vacuum_water_level
+    cleaned_area: sensor.robot_vacuum_cleaned_area
+    # pause_button / resume_button are optional; without them vacuum.pause / vacuum.start are used.
+    script: script.vacuum_control
+  climate:
+    room: 1
+    entity: climate.living_room
+    room_temperature: sensor.living_room_temperature
+    script: script.climate_control
+  blinds:
+    room: 1
+    script: script.blinds_control
+    covers:
+      # target is the name your blinds script understands; position: true if the cover reports it.
+      - {entity: cover.living_room_left, target: left, position: true, label: {en: Left window, ru: Левое окно, uk: Ліве вікно}}
+      - {entity: cover.living_room_right, target: right, position: true, label: {en: Right window, ru: Правое окно, uk: Праве вікно}}
+  # Also available: air_fryer (state, time_left, cancel_button), diffuser (power, run_script)
+  # and blind (one cover on its own card). See README-ROUTINE-CONTROLLER.md.
+
+music:
+  # Settings > Devices & services > Music Assistant > the entry id in the page URL.
+  music_assistant_entry_id: 01ABCDEFGHJKMNPQRSTVWXYZ0
+  # Optional: shown when nothing else plays.
+  spotify: media_player.spotify
+  speakers:
+    - {entity: media_player.kitchen_speaker, icon: SPEAKER, label: {en: Kitchen, ru: Кухня, uk: Кухня}}
+    - {entity: media_player.living_room_tv, icon: TV, label: {en: TV, ru: Телевизор, uk: Телевізор}}
+
+# Scene tiles on the Home page. Each runs a Home Assistant script.
+scenes:
+  - {script: script.scene_morning, icon: SUNRISE, color: WARN, text_color: DARK, label: {en: Morning, ru: Утро, uk: Ранок}, subtitle: {en: "light, music", ru: "свет, музыка", uk: "світло, музика"}}
+  - {script: script.scene_cooking, icon: CHEF, color: ORANGE, label: {en: Cooking, ru: Готовлю, uk: Готую}}
+  - {script: script.scene_movie, icon: TV, color: PURPLE, label: {en: Movie, ru: Кино, uk: Кіно}}
+  - {script: script.scene_all_off, icon: POWER, color: SURF3, label: {en: All off, ru: Всё выкл, uk: Усе вимк}}

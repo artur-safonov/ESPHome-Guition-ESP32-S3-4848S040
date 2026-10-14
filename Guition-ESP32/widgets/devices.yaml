@@ -43,7 +43,7 @@ packages:
 lvgl:
   pages:
     - id: devices_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
         - obj:
             id: devices_main
@@ -52,12 +52,12 @@ lvgl:
             height: 348
             pad_all: 0
             align: TOP_MID
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
             border_opa: TRANSP
             border_width: 0
-            radius: 10
+            radius: 18
             widgets:
 
               # ── Row 1: Alarm · Media Player · Vacuum ─────────────────────
@@ -71,7 +71,7 @@ lvgl:
                   align: TOP_LEFT
                   width: 100
                   height: 100
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -83,8 +83,6 @@ lvgl:
                   on_press:
                     - lvgl.page.show:
                         id: alarm_panel_page
-                        animation: OUT_RIGHT
-                        time: 300ms
 
               - button:
                   id: media_player_page_btn
@@ -93,7 +91,7 @@ lvgl:
                   align: TOP_LEFT
                   width: 100
                   height: 100
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -103,10 +101,9 @@ lvgl:
                         text_font: icons_90
                         text: "${music_icon}"
                   on_press:
+                    - lvgl.widget.hide: menu_controls_main
                     - lvgl.page.show:
                         id: media_player_page
-                        animation: OUT_RIGHT
-                        time: 300ms
 
               - button:
                   id: vacuum_page_btn
@@ -115,7 +112,7 @@ lvgl:
                   align: TOP_LEFT
                   width: 100
                   height: 100
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -127,8 +124,6 @@ lvgl:
                   on_press:
                     - lvgl.page.show:
                         id: vacuum_page
-                        animation: OUT_RIGHT
-                        time: 300ms
 
               # ── Row 2: HVAC · Fans · Shortcuts ───────────────────────────
               # hvac_icon is set in main.yaml to match your HVAC system type.
@@ -140,7 +135,7 @@ lvgl:
                   align: TOP_LEFT
                   width: 100
                   height: 100
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -152,8 +147,6 @@ lvgl:
                   on_press:
                     - lvgl.page.show:
                         id: hvac_page
-                        animation: OUT_RIGHT
-                        time: 300ms
 
               - button:
                   id: fans_page_btn
@@ -162,7 +155,7 @@ lvgl:
                   align: TOP_LEFT
                   width: 100
                   height: 100
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -174,8 +167,6 @@ lvgl:
                   on_press:
                     - lvgl.page.show:
                         id: fans_group_page
-                        animation: OUT_RIGHT
-                        time: 300ms
 
               - button:
                   id: shortcuts_page_btn
@@ -184,7 +175,7 @@ lvgl:
                   align: TOP_LEFT
                   width: 100
                   height: 100
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -196,8 +187,6 @@ lvgl:
                   on_press:
                     - lvgl.page.show:
                         id: shortcuts_page
-                        animation: OUT_RIGHT
-                        time: 300ms
 
               # ── Row 3: Covers ─────────────────────────────────────────────
               - button:
@@ -207,7 +196,7 @@ lvgl:
                   align: TOP_LEFT
                   width: 100
                   height: 100
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -219,8 +208,6 @@ lvgl:
                   on_press:
                     - lvgl.page.show:
                         id: covers_group_page
-                        animation: OUT_RIGHT
-                        time: 300ms
 
 
 # ── Compact layout: remove gaps left by disabled optional buttons ─────────────

@@ -1,0 +1,5 @@
+{%- set ns = namespace(o=[]) -%}
+{%- for x in response['items'] if (x.name | trim | length) > 1 -%}
+{%- set ns.o = ns.o + [{'t': x.name | trim, 's': '', 'u': x.uri, 'k': x.media_type}] -%}
+{%- endfor -%}
+{{ {'i': ns.o[:6]} | tojson }}

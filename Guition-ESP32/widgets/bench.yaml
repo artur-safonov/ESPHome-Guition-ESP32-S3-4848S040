@@ -1,0 +1,61 @@
+# Temporary render benchmark. Press "UI Benchmark" from Home Assistant/API:
+# every page is loaded and fully redrawn 3 times; results are logged in two lines
+# (the task log buffer drops bursts of many lines).
+button:
+  - platform: template
+    name: "UI Benchmark"
+    id: ui_benchmark
+    entity_category: diagnostic
+    on_press:
+      - lambda: |-
+          struct Item { const char *name; lv_obj_t *obj; };
+          Item pages[] = {
+            {"home", id(home_page)->obj},
+            {"lights", id(lights_group_page)->obj},
+            {"devices", id(devices_page)->obj},
+            {"settings", id(settings_page)->obj},
+            {"media", id(media_player_page)->obj},
+            {"covers", id(covers_group_page)->obj},
+            {"scenes", id(shortcuts_page)->obj},
+            {"hvac", id(hvac_page)->obj},
+            {"weather", id(weather_forecast_page)->obj},
+            {"sp_search", id(sp_search_page)->obj},
+          };
+          auto measure = [](lv_obj_t *obj) -> int {
+            lv_screen_load(obj);
+            lv_refr_now(NULL);
+            int64_t sum = 0;
+            for (int i = 0; i < 3; i++) {
+              lv_obj_invalidate(obj);
+              int64_t t0 = esp_timer_get_time();
+              lv_refr_now(NULL);
+              sum += esp_timer_get_time() - t0;
+            }
+            return (int) (sum / 3000);
+          };
+          std::string line1;
+          int total = 0;
+          for (auto &p : pages) {
+            int ms = measure(p.obj);
+            total += ms;
+            line1 += std::string(p.name) + "=" + std::to_string(ms) + " ";
+          }
+          lv_obj_t *blank = lv_obj_create(NULL);
+          lv_obj_set_style_bg_color(blank, lv_color_hex(0x0B0D11), 0);
+          int blank_ms = measure(blank);
+          int flush_ms = -1;
+          auto *band = (uint8_t *) heap_caps_calloc(480 * 16, 2, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+          if (band != nullptr) {
+            int64_t t0 = esp_timer_get_time();
+            for (int y = 0; y < 480; y += 16)
+              id(my_display).draw_pixels_at(0, y, 480, 16, band,
+                                            display::COLOR_ORDER_RGB, display::COLOR_BITNESS_565, true, 0, 0, 0);
+            flush_ms = (int) ((esp_timer_get_time() - t0) / 1000);
+            heap_caps_free(band);
+          }
+          lv_screen_load(id(home_page)->obj);
+          lv_obj_delete(blank);
+          ESP_LOGW("bench", "pages ms: %s", line1.c_str());
+          ESP_LOGW("bench", "avg=%d blank=%d raw_flush=%d internal_free=%dKB largest=%dKB", total / 10, blank_ms, flush_ms,
+                   (int) (heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024),
+                   (int) (heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL) / 1024));

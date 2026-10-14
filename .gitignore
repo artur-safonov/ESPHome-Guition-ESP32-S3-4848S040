@@ -6,6 +6,13 @@
 secrets.yaml
 !secrets.yaml.example
 
+# Your own display: *.local.yaml includes main.yaml with your values, rc_home.yaml holds your
+# Lights / Devices / Music layout, and tools/gen_rc.py generates the two files below from it.
+*.local.yaml
+rc_home.yaml
+Guition-ESP32/rc/rc_config.h
+Guition-ESP32/widgets/rc_entities.yaml
+
 # IDE and editor files
 .vscode/
 .idea/

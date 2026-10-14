@@ -256,6 +256,13 @@
     "\U000F099E", # shield off
     "\U000F0498", # shield
     "\U000F00ED", # calendar
+    "\U000F02D1", # heart         (home scene tile)
+    "\U000F0381", # movie         (home scene tile)
+    "\U000F1A46", # away          (home scene tile)
+    "\U000F0502", # television    (home scene tile)
+    "\U000F04C7", # spotify       (now playing)
+    "\U000F040A", # play
+    "\U000F03E4", # pause
   ]
 
 - file: "Guition-ESP32/fonts/materialdesignicons-webfont.ttf"

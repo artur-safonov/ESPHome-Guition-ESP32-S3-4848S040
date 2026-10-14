@@ -157,10 +157,10 @@ lvgl:
             width: 440
             height: 40
             align: TOP_MID
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${widget_name}_cover_title_lbl
@@ -177,10 +177,10 @@ lvgl:
             width: 200
             height: 220
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               # Cover icon – centered in the upper portion of the panel
               - label:
@@ -234,11 +234,11 @@ lvgl:
             width: 220
             height: 220
             align: TOP_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               # Slider background track
               - button:
@@ -263,7 +263,7 @@ lvgl:
                   value: 0
                   indicator:
                     bg_color: color_amber
-                    radius: 10
+                    radius: 18
                   knob:
                     bg_opa: TRANSP
                   on_release:
@@ -308,11 +308,11 @@ lvgl:
             width: 120
             height: 55
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   align: CENTER
@@ -336,11 +336,11 @@ lvgl:
             width: 120
             height: 55
             align: TOP_MID
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   align: CENTER
@@ -364,11 +364,11 @@ lvgl:
             width: 120
             height: 55
             align: TOP_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   align: CENTER
@@ -393,11 +393,11 @@ lvgl:
             width: 200
             height: 80
             align: BOTTOM_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${widget_name}_cover_exit_icon
@@ -410,8 +410,6 @@ lvgl:
                 - lvgl.widget.show: menu_controls_main
                 - lvgl.page.show:
                     id: covers_group_page
-                    animation: OUT_RIGHT
-                    time: 300ms
 
         # Home button – jumps directly to home page
         - button:
@@ -421,11 +419,11 @@ lvgl:
             width: 200
             height: 80
             align: BOTTOM_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${widget_name}_cover_home_icon
@@ -438,8 +436,6 @@ lvgl:
                 - lvgl.widget.show: menu_controls_main
                 - lvgl.page.show:
                     id: home_page
-                    animation: OUT_RIGHT
-                    time: 300ms
 
 # ── Scripts ───────────────────────────────────────────────────────────────────
 script:

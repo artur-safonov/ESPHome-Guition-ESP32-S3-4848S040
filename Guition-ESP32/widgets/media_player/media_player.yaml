@@ -58,16 +58,12 @@ script:
       - lambda: |-
           std::string url = id(pending_cover_url);
           id(cover_url) = url;
-      - homeassistant.action:
-          action: display_tools.save_media_cover
-          data:
-            entity_id: "${media_player_entity}"
-            size: small
-      - delay: 1s
-      - online_image.release: media_image_jpeg
       - online_image.set_url:
           id: media_image_jpeg
-          url: "${ha_server}/local/display_tools/cover.jpeg"
+          url: !lambda |-
+            if (id(cover_url).empty()) return std::string("${ha_server}/local/routine-controller-placeholder.jpg");
+            if (id(cover_url).rfind("http", 0) == 0) return id(cover_url);
+            return std::string("${ha_server}") + id(cover_url);
 
   - id: update_repeat_mode_script
     mode: restart
@@ -125,7 +121,7 @@ script:
 lvgl:
   pages:
     - id: media_player_page
-      bg_color: color_slate_blue_gray
+      bg_color: 0x000000
       widgets:
         # ── Page title ──────────────────────────────────────────────────────
         - label:
@@ -133,8 +129,8 @@ lvgl:
             align: TOP_MID
             y: 20
             text_font: nunito_20
-            text_color: color_misty_blue
-            text: "Media Player"
+            text_color: 0xFFFFFF
+            text: "Spotify"
 
         # ── Divider under title ──────────────────────────────────────────────
         - obj:
@@ -143,8 +139,8 @@ lvgl:
             width: 440
             height: 1
             pad_all: 0
-            bg_color: color_misty_blue
-            bg_opa: 20%
+            bg_color: 0x1DB954
+            bg_opa: 100%
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 0
@@ -157,10 +153,10 @@ lvgl:
             width: 140
             height: 130
             align: TOP_LEFT
-            bg_color: color_steel_blue
+            bg_color: 0x181818
             bg_image_src: media_image_jpeg
-            border_color: color_slate_blue_gray
-            border_width: 10
+            border_color: 0x282828
+            border_width: 4
             shadow_opa: TRANSP
             radius: 20
 
@@ -171,12 +167,12 @@ lvgl:
             width: 300
             height: 120
             align: TOP_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: 0x181818
+            bg_opa: 100%
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: media_player_title_label
@@ -185,9 +181,9 @@ lvgl:
                   long_mode: DOT
                   y: -25
                   align: CENTER
-                  text_color: color_misty_blue
+                  text_color: 0xFFFFFF
                   text_font: nunito_20
-                  text: "Title"
+                  text: "Ничего не играет"
               - label:
                   id: media_player_artist_label
                   height: 30
@@ -195,21 +191,21 @@ lvgl:
                   long_mode: DOT
                   y: 3
                   align: CENTER
-                  text_color: color_misty_blue
+                  text_color: 0xB3B3B3
                   text_font: nunito_16
-                  text: "Artist"
+                  text: "Spotify"
               - slider:
                   id: media_player_duration_pos_slider
                   radius: 2
                   y: 35
-                  bg_color: color_slate_blue_gray
+                  bg_color: 0x535353
                   align: CENTER
                   width: 260
                   height: 5
                   min_value: 0
                   max_value: 100
                   indicator:
-                    bg_color: color_misty_blue
+                    bg_color: 0x1DB954
                     radius: 2
                   knob:
                     bg_opa: TRANSP
@@ -227,17 +223,17 @@ lvgl:
             width: 440
             height: 105
             align: TOP_MID
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: 0x181818
+            bg_opa: 100%
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               # Off
               - label:
                   x: 10
                   align: LEFT_MID
-                  text_color: color_steel_blue
+                  text_color: 0xB3B3B3
                   text_font: icons_38
                   text: "${power_icon}"
                   on_press:
@@ -249,7 +245,7 @@ lvgl:
               - label:
                   x: -80
                   align: CENTER
-                  text_color: color_misty_blue
+                  text_color: 0xFFFFFF
                   text_font: icons_38
                   text: "${back_step_icon}"
                   on_press:
@@ -263,8 +259,8 @@ lvgl:
                   id: media_player_control_play_bg
                   height: 90
                   width: 90
-                  bg_color: color_steel_blue
-                  bg_opa: 80%
+                  bg_color: 0x1DB954
+                  bg_opa: 100%
                   border_opa: TRANSP
                   radius: 50
                   align: CENTER
@@ -272,7 +268,7 @@ lvgl:
                     - label:
                         id: media_player_state_label
                         align: CENTER
-                        text_color: color_misty_blue
+                        text_color: 0x000000
                         text_font: icons_48
                         text: "${play_icon}"
                         on_press:
@@ -294,7 +290,7 @@ lvgl:
               - label:
                   x: 80
                   align: CENTER
-                  text_color: color_misty_blue
+                  text_color: 0xFFFFFF
                   text_font: icons_38
                   text: "${forward_step_icon}"
                   on_press:
@@ -308,7 +304,7 @@ lvgl:
                   id: media_player_repeat_label
                   x: -10
                   align: RIGHT_MID
-                  text_color: color_steel_blue
+                  text_color: 0xB3B3B3
                   text_font: icons_38
                   text: "${repeat_all_icon}"
                   on_press:
@@ -320,18 +316,18 @@ lvgl:
             width: 440
             height: 80
             align: TOP_MID
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: 0x181818
+            bg_opa: 100%
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               # mute
               - label:
                   id: media_player_mute_label
                   x: 10
                   align: LEFT_MID
-                  text_color: color_steel_blue
+                  text_color: 0xB3B3B3
                   text_font: icons_32
                   text: "${volume_on_icon}"
                   on_press:
@@ -356,7 +352,7 @@ lvgl:
                   id: media_player_vol_down_label
                   x: -280
                   align: RIGHT_MID
-                  text_color: color_steel_blue
+                  text_color: 0xB3B3B3
                   text_font: icons_32
                   text: "${volume_minus_icon}"
                   on_press:
@@ -368,7 +364,7 @@ lvgl:
               # set vol
               - slider:
                   id: media_player_volume_slider
-                  bg_color: color_slate_blue_gray
+                  bg_color: 0x535353
                   bg_opa: 100%
                   align: RIGHT_MID
                   x: -60
@@ -377,9 +373,9 @@ lvgl:
                   min_value: 0
                   max_value: 100
                   indicator:
-                    bg_color: color_misty_blue
+                    bg_color: 0x1DB954
                   knob:
-                    bg_color: color_misty_blue
+                    bg_color: 0xFFFFFF
                   on_release:
                     - homeassistant.action:
                         action: media_player.volume_set
@@ -392,7 +388,7 @@ lvgl:
                   id: media_player_vol_up_label
                   x: -10
                   align: RIGHT_MID
-                  text_color: color_steel_blue
+                  text_color: 0xB3B3B3
                   text_font: icons_32
                   text: "${volume_plus_icon}"
                   on_press:
@@ -402,6 +398,107 @@ lvgl:
                           entity_id: "${media_player_entity}"
 
         # Hidden label – keeps sensor update target valid
+        # Spotify tab bar (Home / Player / Search / Library / Speakers)
+        - obj:
+            align: BOTTOM_MID
+            width: 480
+            height: 64
+            bg_color: 0x000000
+            bg_opa: COVER
+            border_width: 0
+            radius: 0
+            pad_all: 0
+            scrollable: false
+            layout:
+              type: FLEX
+              flex_flow: ROW
+              flex_align_main: SPACE_EVENLY
+              flex_align_cross: CENTER
+            widgets:
+              - button:
+                  width: 92
+                  pad_all: 0
+                  height: 52
+                  radius: 12
+                  bg_opa: TRANSP
+                  border_width: 0
+                  shadow_opa: TRANSP
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text_font: nunito_16
+                        text_color: 0xA7A7A7
+                        text: "Главная"
+                  on_click:
+                  - lvgl.page.show: home_page
+                  - lvgl.widget.show: menu_controls_main
+              - button:
+                  width: 92
+                  pad_all: 0
+                  height: 52
+                  radius: 12
+                  bg_opa: TRANSP
+                  border_width: 0
+                  shadow_opa: TRANSP
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text_font: nunito_16
+                        text_color: 0xFFFFFF
+                        text: "Плеер"
+                  on_click:
+                  - lvgl.page.show: media_player_page
+              - button:
+                  width: 92
+                  pad_all: 0
+                  height: 52
+                  radius: 12
+                  bg_opa: TRANSP
+                  border_width: 0
+                  shadow_opa: TRANSP
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text_font: nunito_16
+                        text_color: 0xA7A7A7
+                        text: "Поиск"
+                  on_click:
+                  - lvgl.page.show: sp_search_page
+                  - lvgl.widget.show: sp_keyboard
+              - button:
+                  width: 92
+                  pad_all: 0
+                  height: 52
+                  radius: 12
+                  bg_opa: TRANSP
+                  border_width: 0
+                  shadow_opa: TRANSP
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text_font: nunito_16
+                        text_color: 0xA7A7A7
+                        text: "Медиатека"
+                  on_click:
+                  - lvgl.page.show: sp_library_page
+                  - script.execute: sp_load_library
+              - button:
+                  width: 92
+                  pad_all: 0
+                  height: 52
+                  radius: 12
+                  bg_opa: TRANSP
+                  border_width: 0
+                  shadow_opa: TRANSP
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text_font: nunito_16
+                        text_color: 0xA7A7A7
+                        text: "Колонки"
+                  on_click:
+                  - lvgl.page.show: sp_devices_page
+                  - script.execute: sp_load_devices
         - label:
             id: media_player_name_label
             hidden: true
@@ -413,19 +510,24 @@ text_sensor:
     id: media_player_state
     entity_id: "${media_player_entity}"
     on_value:
+      # Open the player automatically only on the transition into "playing"
+      # (HA re-sends the same state on attribute updates).
       - if:
           condition:
-            lambda: 'return x == "paused";'
+            lambda: |-
+              static std::string last;
+              bool started = x == "playing" && last != "playing" && !last.empty();
+              last = x;
+              return started && !id(screensaver_active);
           then:
-            - lvgl.label.update: 
-                id: media_player_state_label
-                x: 0
-                text: "${play_icon}"
-          else:
-            - lvgl.label.update: 
-                id: media_player_state_label
-                x: 0
-                text: "${pause_icon}"
+            - lvgl.widget.hide: menu_controls_main
+            - lvgl.page.show: media_player_page
+      - lvgl.label.update:
+          id: media_player_state_label
+          text: !lambda 'return x == "playing" ? std::string("${pause_icon}") : std::string("${play_icon}");'
+      - lvgl.label.update:
+          id: home_np_btn
+          text: !lambda 'return x == "playing" ? std::string("\U000F03E4") : std::string("\U000F040A");'
 
   - platform: homeassistant
     id: media_player_cover
@@ -445,6 +547,9 @@ text_sensor:
       - lvgl.label.update:
           id: media_player_title_label
           text: !lambda return x;
+      - lvgl.label.update:
+          id: home_np_title
+          text: !lambda 'return x.empty() ? std::string("Spotify") : x;'
 
   - platform: homeassistant
     id: media_player_artist_sensor
@@ -455,6 +560,9 @@ text_sensor:
       - lvgl.label.update:
           id: media_player_artist_label
           text: !lambda return x;
+      - lvgl.label.update:
+          id: home_np_artist
+          text: !lambda 'return x.empty() ? std::string("Ничего не играет") : x;'
 
   - platform: homeassistant
     id: media_player_repeat
@@ -524,13 +632,13 @@ binary_sensor:
                 id: media_player_mute_label
                 text: "${volume_on_icon}"
 
-image:
-  - platform: online_image
-    url: "https://www.example.com/example.jpeg"
+online_image:
+  - url: "https://www.example.com/example.jpeg"
     format: JPEG
     type: RGB565
-    resize: 120x120
+    resize: 132x122
     id: media_image_jpeg
+    update_interval: never
     on_download_finished:
       - lvgl.obj.update:
           id: media_cover

@@ -53,7 +53,7 @@ packages:
 lvgl:
   pages:
     - id: shortcuts_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
 
         # ── Page title ──────────────────────────────────────────────────────
@@ -72,8 +72,8 @@ lvgl:
             width: 440
             height: 1
             pad_all: 0
-            bg_color: color_misty_blue
-            bg_opa: 20%
+            bg_color: color_card_hi
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 0
@@ -87,11 +87,11 @@ lvgl:
             height: 295
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
 
               # ── Row 1 ──────────────────────────────────────────────────────
@@ -101,7 +101,7 @@ lvgl:
                   y: 10
                   width: 130
                   height: 130
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -133,7 +133,7 @@ lvgl:
                   y: 10
                   width: 130
                   height: 130
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -165,7 +165,7 @@ lvgl:
                   y: 10
                   width: 130
                   height: 130
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -198,7 +198,7 @@ lvgl:
                   y: 155
                   width: 130
                   height: 130
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -230,7 +230,7 @@ lvgl:
                   y: 155
                   width: 130
                   height: 130
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:
@@ -262,7 +262,7 @@ lvgl:
                   y: 155
                   width: 130
                   height: 130
-                  radius: 10
+                  radius: 18
                   bg_color: color_slate_blue_gray
                   shadow_opa: TRANSP
                   widgets:

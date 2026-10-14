@@ -137,11 +137,7 @@ text_sensor:
 
           auto dropdown = id(vacuum_fan_speed_dropdown);
           if (dropdown != nullptr) {
-            esphome::FixedVector<const char*> fv;
-            for (const auto& s : id(vacuum_fan_speeds)) {
-              fv.push_back(s.c_str());
-            }
-            dropdown->set_options(std::move(fv));
+            dropdown->set_options(id(vacuum_fan_speeds));
           }
 
 
@@ -248,7 +244,7 @@ text_sensor:
 lvgl:
   pages:
     - id: vacuum_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
         # ── Page title ──────────────────────────────────────────────────────
         - label:
@@ -266,8 +262,8 @@ lvgl:
             width: 440
             height: 1
             pad_all: 0
-            bg_color: color_misty_blue
-            bg_opa: 20%
+            bg_color: color_card_hi
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 0
@@ -280,12 +276,12 @@ lvgl:
             height: 222
             align: TOP_MID
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - obj:
                   x: 10
@@ -329,8 +325,8 @@ lvgl:
                           max_height: 200
                           selected:
                             checked:
-                              bg_color: color_steel_blue
-                              bg_opa: 20%
+                              bg_color: color_card
+                              bg_opa: COVER
                               text_color: color_misty_blue
                             pressed:
                               bg_opa: TRANSP
@@ -524,12 +520,12 @@ lvgl:
             height: 100
             pad_all: 10
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             layout:
               type: FLEX
               flex_align_main: SPACE_AROUND
@@ -587,12 +583,12 @@ lvgl:
             height: 100
             pad_all: 10
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             layout:
               type: FLEX
               flex_align_main: SPACE_AROUND
@@ -672,12 +668,12 @@ lvgl:
             height: 100
             pad_all: 10
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             layout:
               type: FLEX
               flex_align_main: SPACE_AROUND
@@ -735,12 +731,12 @@ lvgl:
             height: 100
             pad_all: 10
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             layout:
               type: FLEX
               flex_align_main: SPACE_AROUND
@@ -819,12 +815,12 @@ lvgl:
             height: 100
             pad_all: 10
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             layout:
               type: FLEX
               flex_align_main: SPACE_AROUND

@@ -1,0 +1,7 @@
+{%- set ns = namespace(o=[]) -%}
+{%- for key, n in [('artists', 2), ('tracks', 3), ('albums', 2), ('playlists', 2)] -%}
+{%- for x in (response[key] if key in response else [])[:n] -%}
+{%- set ns.o = ns.o + [{'t': x.name, 's': (x.artists | default([]) | map(attribute='name') | join(', ')), 'u': x.uri, 'k': x.media_type}] -%}
+{%- endfor -%}
+{%- endfor -%}
+{{ {'i': ns.o[:8]} | tojson }}

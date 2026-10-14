@@ -53,7 +53,7 @@ lvgl:
 
   pages:
     - id: settings_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
 
         # ── Scrollable area — ends above the nav bar (menu bar top ≈ y 380) ──
@@ -82,12 +82,12 @@ lvgl:
                   height: 80
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
 
                     - label:
@@ -109,6 +109,7 @@ lvgl:
                         x: 240
                         width: 200
                         align: LEFT_MID
+                        selected_index: !lambda return id(current_language);
                         options:
                           - Deutsch         # de
                           - Español         # es
@@ -119,6 +120,7 @@ lvgl:
                           - Русский         # ru
                           - English (US)    # en
                           - Polski          # pl
+                          - Українська      # uk
                         bg_opa: TRANSP
                         shadow_opa: TRANSP
                         border_opa: TRANSP
@@ -137,8 +139,8 @@ lvgl:
                           max_height: 280
                           selected:
                             checked:
-                              bg_color: color_steel_blue
-                              bg_opa: 20%
+                              bg_color: color_card
+                              bg_opa: COVER
                               text_color: color_misty_blue
                             pressed:
                               bg_opa: TRANSP
@@ -214,12 +216,12 @@ lvgl:
                   height: 80
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
                     - label:
                         id: theme_label
@@ -260,8 +262,8 @@ lvgl:
                           max_height: 280
                           selected:
                             checked:
-                              bg_color: color_steel_blue
-                              bg_opa: 20%
+                              bg_color: color_card
+                              bg_opa: COVER
                               text_color: color_misty_blue
                             pressed:
                               bg_opa: TRANSP
@@ -283,12 +285,12 @@ lvgl:
                   height: 80
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
 
                     - label:
@@ -301,20 +303,27 @@ lvgl:
 
                     - slider:
                         id: display_backlight_brightness_slider
-                        x: -20
-                        radius: 10
-                        bg_color: color_slate_blue_gray
+                        x: -32
+                        radius: 6
+                        bg_color: 0x252B36
+                        bg_opa: COVER
                         align: RIGHT_MID
-                        width: 260
-                        height: 48
+                        width: 236
+                        height: 10
+                        ext_click_area: 20
                         min_value: 35
                         max_value: 100
                         value: 100
                         indicator:
-                          bg_color: color_misty_blue
-                          radius: 10
+                          bg_color: 0x4C8DFF
+                          radius: 6
                         knob:
-                          bg_opa: TRANSP
+                          bg_color: 0xFFFFFF
+                          bg_opa: COVER
+                          radius: 100
+                          pad_all: 7
+                          shadow_opa: TRANSP
+                          border_width: 0
                         on_release:
                           then:
                             - light.turn_on:
@@ -330,12 +339,12 @@ lvgl:
                   height: 80
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
                     - label:
                         id: display_timeout_label
@@ -376,8 +385,8 @@ lvgl:
                           max_height: 360
                           selected:
                             checked:
-                              bg_color: color_steel_blue
-                              bg_opa: 20%
+                              bg_color: color_card
+                              bg_opa: COVER
                               text_color: color_misty_blue
                             pressed:
                               bg_opa: TRANSP
@@ -404,12 +413,12 @@ lvgl:
                   height: 80
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
                     - label:
                         id: clock_format_label
@@ -427,7 +436,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: clock_12h_label
@@ -455,7 +464,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: clock_24h_label
@@ -484,12 +493,12 @@ lvgl:
                   height: 80
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
                     - label:
                         id: temp_unit_label
@@ -507,7 +516,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: temp_f_label
@@ -534,7 +543,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: temp_c_label
@@ -562,12 +571,12 @@ lvgl:
                   height: 130
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
                     - label:
                         id: screensaver_style_label
@@ -587,7 +596,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: ss_digital_lbl
@@ -618,7 +627,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: ss_analog_lbl
@@ -649,7 +658,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: ss_none_lbl
@@ -692,12 +701,12 @@ lvgl:
                   height: 80
                   align: TOP_LEFT
                   pad_all: 0
-                  bg_color: color_steel_blue
-                  bg_opa: 20%
+                  bg_color: color_card
+                  bg_opa: COVER
                   border_opa: TRANSP
                   border_width: 0
                   shadow_opa: TRANSP
-                  radius: 10
+                  radius: 18
                   widgets:
                     - label:
                         id: home_clock_style_lbl
@@ -717,7 +726,7 @@ lvgl:
                         bg_color: color_misty_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: home_std_lbl
@@ -748,7 +757,7 @@ lvgl:
                         bg_color: color_steel_blue
                         shadow_opa: TRANSP
                         border_opa: TRANSP
-                        radius: 10
+                        radius: 18
                         widgets:
                           - label:
                               id: home_flip_lbl
@@ -768,4 +777,3 @@ lvgl:
                               bg_color: color_misty_blue
                           - lvgl.widget.hide: display_time
                           - lvgl.widget.show: home_flip_panels
-                          - lvgl.widget.show: home_flip_seam

@@ -19,7 +19,7 @@ globals:
 lvgl:
   pages:
     - id: alarm_panel_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
         # ── Page title ──────────────────────────────────────────────────────
         - label:
@@ -37,8 +37,8 @@ lvgl:
             width: 440
             height: 1
             pad_all: 0
-            bg_color: color_misty_blue
-            bg_opa: 20%
+            bg_color: color_card_hi
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 0
@@ -51,12 +51,12 @@ lvgl:
             height: 80
             pad_all: 0
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - obj:
                   id: alarm_panel_state_icon_bg
@@ -96,11 +96,11 @@ lvgl:
             width: 440
             height: 240
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - obj:
                   id: alarm_panel_button_disarmed
@@ -514,11 +514,11 @@ lvgl:
             width: 440
             height: 360
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - obj:
                   width: 400
@@ -529,7 +529,7 @@ lvgl:
                   pad_all: 0
                   bg_opa: transp
                   shadow_opa: transp
-                  radius: 10
+                  radius: 18
                   widgets:
                     - label:
                         id: alarm_panel_keypad_code_label

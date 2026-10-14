@@ -181,8 +181,8 @@ lvgl:
             width: 440
             height: 1
             pad_all: 0
-            bg_color: color_misty_blue
-            bg_opa: 20%
+            bg_color: color_card_hi
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 0
@@ -196,12 +196,12 @@ lvgl:
             height: 50
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: hvac_state_label
@@ -219,12 +219,12 @@ lvgl:
             height: 65
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   x: 8
@@ -264,12 +264,12 @@ lvgl:
             height: 90
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
 
               - obj:
@@ -334,8 +334,8 @@ lvgl:
                   height: 60
                   radius: 30
                   pad_all: 0
-                  bg_color: color_misty_blue
-                  bg_opa: 20%
+                  bg_color: color_card_hi
+                  bg_opa: COVER
                   shadow_opa: TRANSP
                   border_opa: TRANSP
                   border_width: 0
@@ -362,12 +362,12 @@ lvgl:
             height: 90
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
 
               - obj:
@@ -376,10 +376,10 @@ lvgl:
                   align: LEFT_MID
                   width: 105
                   height: 60
-                  radius: 10
+                  radius: 18
                   pad_all: 0
-                  bg_color: color_misty_blue
-                  bg_opa: 20%
+                  bg_color: color_card_hi
+                  bg_opa: COVER
                   shadow_opa: TRANSP
                   border_opa: TRANSP
                   border_width: 0
@@ -404,10 +404,10 @@ lvgl:
                   align: LEFT_MID
                   width: 105
                   height: 60
-                  radius: 10
+                  radius: 18
                   pad_all: 0
-                  bg_color: color_misty_blue
-                  bg_opa: 20%
+                  bg_color: color_card_hi
+                  bg_opa: COVER
                   shadow_opa: TRANSP
                   border_opa: TRANSP
                   border_width: 0
@@ -446,7 +446,7 @@ lvgl:
             border_opa: TRANSP
             border_width: 0
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
 
               - obj:

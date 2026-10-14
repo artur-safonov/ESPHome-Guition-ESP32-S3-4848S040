@@ -50,18 +50,16 @@ script:
             text     = lv_color_hex(0xF5F5F0);   // star white
             surf_opa = LV_OPA_60;
           } else {                 // Dark Theme (default, theme == 1)
-            bg       = lv_color_hex(0x343645);
-            surface  = lv_color_hex(0x606682);
-            text     = lv_color_hex(0x9BA2BC);
-            surf_opa = LV_OPA_20;
+            bg       = lv_color_hex(0x0B0D11);
+            surface  = lv_color_hex(0x171A21);
+            text     = lv_color_hex(0xF1F3F7);
+            surf_opa = LV_OPA_COVER;
           }
 
           // ── Page backgrounds ─────────────────────────────────────────────
           lv_obj_t* pages[] = {
             id(home_page)->obj, id(settings_page)->obj, id(system_info_page)->obj,
-            id(alarm_panel_page)->obj, ${hvac_page_ref}, id(weather_forecast_page)->obj,
-            id(devices_page)->obj, id(lights_group_page)->obj, id(fans_group_page)->obj,
-            id(people_page)->obj,
+            id(weather_forecast_page)->obj, id(people_page)->obj,
           };
           for (auto* p : pages) {
             lv_obj_set_style_bg_color(p, bg, LV_PART_MAIN);
@@ -146,7 +144,7 @@ script:
             lv_obj_set_style_bg_color(id(home_flip_btn), lv_palette_lighten(LV_PALETTE_BLUE, 2), LV_PART_MAIN);
             lv_obj_add_flag(id(display_time),       LV_OBJ_FLAG_HIDDEN);
             lv_obj_clear_flag(id(home_flip_panels), LV_OBJ_FLAG_HIDDEN);
-            lv_obj_clear_flag(id(home_flip_seam),   LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(home_flip_seam),     LV_OBJ_FLAG_HIDDEN);
           }
 
           // ── Theme background images ──────────────────────────────────────

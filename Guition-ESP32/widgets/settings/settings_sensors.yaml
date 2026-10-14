@@ -16,7 +16,7 @@ text_sensor:
       - lambda: |-
           std::string lang_code = x;
           int lang_index = 7; // default: English (US)
-          for (int i = 0; i <= 8; i++) {
+          for (int i = 0; i <= 9; i++) {
             if (id(flag_icon_mapping_name)[i] == lang_code) {
               lang_index = i;
               break;
@@ -28,7 +28,7 @@ text_sensor:
           id: language_dropdown
           selected_index: !lambda |-
             int lang_index = 7;
-            for (int i = 0; i <= 8; i++) {
+            for (int i = 0; i <= 9; i++) {
               if (id(flag_icon_mapping_name)[i] == x) {
                 lang_index = i;
                 break;
@@ -40,7 +40,7 @@ text_sensor:
           id: flag_language_image
           src: !lambda |-
             int lang_index = 7;
-            for (int i = 0; i <= 8; i++) {
+            for (int i = 0; i <= 9; i++) {
               if (id(flag_icon_mapping_name)[i] == x) {
                 lang_index = i;
                 break;
@@ -142,3 +142,4 @@ text_sensor:
                 }
               }
             }
+

@@ -309,7 +309,7 @@ script:
 lvgl:
   pages:
     - id: weather_forecast_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
 
         # ── Title bar ─────────────────────────────────────────────────────────
@@ -320,11 +320,11 @@ lvgl:
             height: 40
             align: TOP_MID
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: forecast_title_lbl
@@ -342,8 +342,8 @@ lvgl:
             height: 130
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 12
@@ -417,8 +417,8 @@ lvgl:
             height: 170
             align: TOP_LEFT
             pad_all: 6
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 12
@@ -459,8 +459,8 @@ lvgl:
             height: 170
             align: TOP_LEFT
             pad_all: 6
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 12
@@ -501,8 +501,8 @@ lvgl:
             height: 170
             align: TOP_LEFT
             pad_all: 6
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 12
@@ -543,8 +543,8 @@ lvgl:
             height: 170
             align: TOP_LEFT
             pad_all: 6
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 12
@@ -584,11 +584,11 @@ lvgl:
             width: 200
             height: 50
             align: BOTTOM_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   align: CENTER
@@ -600,8 +600,6 @@ lvgl:
                 - lvgl.widget.show: menu_controls_main
                 - lvgl.page.show:
                     id: home_page
-                    animation: OUT_RIGHT
-                    time: 300ms
 
         # ── Refresh button ────────────────────────────────────────────────────
         - button:
@@ -611,11 +609,11 @@ lvgl:
             width: 200
             height: 50
             align: BOTTOM_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: forecast_refresh_lbl

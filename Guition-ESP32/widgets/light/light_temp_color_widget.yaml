@@ -177,10 +177,10 @@ lvgl:
             width: 440
             height: 40
             align: TOP_MID
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${widget_name}_light_rgb_lable_name
@@ -196,10 +196,10 @@ lvgl:
             width: 200
             height: 280
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - button:
                   id: ${widget_name}_light_rgb_light_on
@@ -238,11 +238,11 @@ lvgl:
             width: 220
             height: 280
             align: TOP_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - button:
                   id: ${widget_name}_light_rgb_color_temp_gradient
@@ -296,11 +296,11 @@ lvgl:
             width: 360
             height: 80
             align: BOTTOM_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - obj:
                   id: ${widget_name}_light_rgb_brightness_pos
@@ -378,11 +378,11 @@ lvgl:
             width: 60
             height: 80
             align: BOTTOM_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${widget_name}_light_rgb_exit_on_icon
@@ -395,8 +395,6 @@ lvgl:
                 - lvgl.widget.show: menu_controls_main
                 - lvgl.page.show:
                     id: lights_group_page
-                    animation: OUT_RIGHT
-                    time: 300ms
 
 script:
   - id: ${widget_name}_check_all_data_ready

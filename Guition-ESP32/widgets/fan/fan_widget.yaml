@@ -216,10 +216,10 @@ lvgl:
             width: 440
             height: 40
             align: TOP_MID
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${widget_name}_fan_label_name
@@ -238,10 +238,10 @@ lvgl:
             width: 200
             height: 280
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - button:
                   id: ${widget_name}_fan_power_btn
@@ -296,8 +296,8 @@ lvgl:
             width: 220
             height: 380
             align: TOP_RIGHT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 20
@@ -341,7 +341,7 @@ lvgl:
                         value: 100
                         indicator:
                           bg_color: color_sky_blue
-                          radius: 10
+                          radius: 18
                         knob:
                           bg_opa: TRANSP
                         on_value:
@@ -402,10 +402,10 @@ lvgl:
             width: 60
             height: 60
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${widget_name}_fan_exit_icon

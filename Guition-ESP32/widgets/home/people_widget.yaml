@@ -108,7 +108,7 @@ text_sensor:
 lvgl:
   pages:
     - id: people_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
 
         # ── Page title ───────────────────────────────────────────────────────
@@ -127,8 +127,8 @@ lvgl:
             width: 440
             height: 1
             pad_all: 0
-            bg_color: color_misty_blue
-            bg_opa: 20%
+            bg_color: color_card_hi
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 0

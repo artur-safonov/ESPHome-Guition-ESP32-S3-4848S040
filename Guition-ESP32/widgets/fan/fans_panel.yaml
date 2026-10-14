@@ -59,7 +59,7 @@ substitutions:
 lvgl:
   pages:
     - id: fans_group_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
 
         # ── Page title ──────────────────────────────────────────────────────
@@ -78,8 +78,8 @@ lvgl:
             width: 440
             height: 1
             pad_all: 0
-            bg_color: color_misty_blue
-            bg_opa: 20%
+            bg_color: color_card_hi
+            bg_opa: COVER
             border_opa: TRANSP
             shadow_opa: TRANSP
             radius: 0
@@ -92,10 +92,10 @@ lvgl:
             width: 140
             height: 130
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${fan_widget_name_1}_fan_on
@@ -120,10 +120,10 @@ lvgl:
             width: 140
             height: 130
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${fan_widget_name_2}_fan_on
@@ -148,10 +148,10 @@ lvgl:
             width: 140
             height: 130
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${fan_widget_name_3}_fan_on
@@ -176,10 +176,10 @@ lvgl:
             width: 140
             height: 130
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${fan_widget_name_4}_fan_on
@@ -204,10 +204,10 @@ lvgl:
             width: 140
             height: 130
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${fan_widget_name_5}_fan_on
@@ -232,10 +232,10 @@ lvgl:
             width: 140
             height: 130
             align: TOP_LEFT
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             shadow_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               - label:
                   id: ${fan_widget_name_6}_fan_on
@@ -312,8 +312,6 @@ binary_sensor:
         - lvgl.widget.hide: menu_controls_main
         - lvgl.page.show:
             id: ${fan_widget_name_1}_fan_detail_page
-            animation: OUT_RIGHT
-            time: 300ms
 
   - platform: lvgl
     id: ${fan_widget_name_2}_btn_sensor
@@ -332,8 +330,6 @@ binary_sensor:
         - lvgl.widget.hide: menu_controls_main
         - lvgl.page.show:
             id: ${fan_widget_name_2}_fan_detail_page
-            animation: OUT_RIGHT
-            time: 300ms
 
   - platform: lvgl
     id: ${fan_widget_name_3}_btn_sensor
@@ -352,8 +348,6 @@ binary_sensor:
         - lvgl.widget.hide: menu_controls_main
         - lvgl.page.show:
             id: ${fan_widget_name_3}_fan_detail_page
-            animation: OUT_RIGHT
-            time: 300ms
 
   - platform: lvgl
     id: ${fan_widget_name_4}_btn_sensor
@@ -372,8 +366,6 @@ binary_sensor:
         - lvgl.widget.hide: menu_controls_main
         - lvgl.page.show:
             id: ${fan_widget_name_4}_fan_detail_page
-            animation: OUT_RIGHT
-            time: 300ms
 
   - platform: lvgl
     id: ${fan_widget_name_5}_btn_sensor
@@ -392,8 +384,6 @@ binary_sensor:
         - lvgl.widget.hide: menu_controls_main
         - lvgl.page.show:
             id: ${fan_widget_name_5}_fan_detail_page
-            animation: OUT_RIGHT
-            time: 300ms
 
   - platform: lvgl
     id: ${fan_widget_name_6}_btn_sensor
@@ -412,5 +402,3 @@ binary_sensor:
         - lvgl.widget.hide: menu_controls_main
         - lvgl.page.show:
             id: ${fan_widget_name_6}_fan_detail_page
-            animation: OUT_RIGHT
-            time: 300ms

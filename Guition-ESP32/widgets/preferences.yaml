@@ -82,7 +82,7 @@ script:
     then:
       - lambda: |-
           // Rows: language index  Cols: string index (see mapping above)
-          static const char* const t[9][25] = {
+          static const char* const t[10][25] = {
 
             // ── de – German ────────────────────────────────────────────────
             { "Alarmanlage",       "Rollos",           "Ventilatoren",       "Beleuchtung",       "Szenen",
@@ -176,16 +176,18 @@ script:
               "Flip",              "Brak",             "Poka\u017c zdarzenia","Zegar G\u0142\u00f3wny","Standardowy",
               "Flip" },
 
+            // ── uk – Ukrainian ─────────────────────────────────────────────
+            { "Охорона", "Штори", "Вентилятори", "Освітлення", "Сцени",
+              "Люди", "Прогноз на 5 днів", "Ймовірність дощу", "Оновити",
+              "Мова", "Тема", "Підсвітка", "Сон (сек)", "Годинник",
+              "12г", "24г", "Температура", "Заставка", "Цифровий",
+              "Фліп", "Немає", "Показувати події", "Годинник головної", "Стандарт",
+              "Фліп" },
+
           };
 
           int l = id(current_language);
-          if (l < 0 || l > 8) l = 7;  // default to en-US if out of range
-
-          lv_label_set_text(id(alarm_panel_header),       t[l][0]);
-          lv_label_set_text(id(covers_panel_header),      t[l][1]);
-          lv_label_set_text(id(fans_panel_header),        t[l][2]);
-          lv_label_set_text(id(lights_panel_header),      t[l][3]);
-          lv_label_set_text(id(shortcuts_panel_header),   t[l][4]);
+          if (l < 0 || l > 9) l = 7;  // default to en-US if out of range
           lv_label_set_text(id(people_page_title_lbl),    t[l][5]);
           lv_label_set_text(id(forecast_title_lbl),       t[l][6]);
           lv_label_set_text(id(forecast_rain_lbl),        t[l][7]);
@@ -206,6 +208,13 @@ script:
           lv_label_set_text(id(home_clock_style_lbl),     t[l][22]);
           lv_label_set_text(id(home_std_lbl),             t[l][23]);
           lv_label_set_text(id(home_flip_lbl),            t[l][24]);
+          {
+            const char *themes = l == 6 ? "Сакура\nТемная\nЭспеон\nОкеан\nПариж\nПатриот"
+                               : l == 9 ? "Сакура\nТемна\nЕспеон\nОкеан\nПариж\nПатріот"
+                               : "Cherry Blossom\nDark Theme\nEspeon\nOcean Theme\nParis\nPatriotic";
+            lv_dropdown_set_options(id(theme_dropdown)->obj, themes);
+            lv_dropdown_set_selected(id(theme_dropdown)->obj, id(current_theme));
+          }
 
 
 # ── English label defaults ────────────────────────────────────────────────────
@@ -336,6 +345,7 @@ select:
       then:
         - delay: 400ms
         - script.execute: apply_ui_translations
+        - script.execute: time_update
 
 
 # ── Apply at boot ─────────────────────────────────────────────────────────────

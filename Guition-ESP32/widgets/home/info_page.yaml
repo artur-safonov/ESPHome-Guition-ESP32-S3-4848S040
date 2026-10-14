@@ -153,7 +153,7 @@ text_sensor:
 lvgl:
   pages:
     - id: system_info_page
-      bg_color: color_slate_blue_gray
+      bg_color: color_bg
       widgets:
         - obj:
             id: system_info_container
@@ -163,10 +163,10 @@ lvgl:
             height: 340
             align: TOP_LEFT
             pad_all: 0
-            bg_color: color_steel_blue
-            bg_opa: 20%
+            bg_color: color_card
+            bg_opa: COVER
             border_opa: TRANSP
-            radius: 10
+            radius: 18
             widgets:
               # SRAM memory (show used from total)
               - obj:

@@ -1,6 +1,11 @@
 # ESPHome · Guition ESP32-S3-4848S040
 ### A fully-featured smart home display — built on ESPHome + LVGL
 
+> **This fork adds the Routine Controller UI**: Lights, Devices and Music pages written in C++,
+> configured from one file, `rc_home.yaml`. Start with
+> [README-ROUTINE-CONTROLLER.md](README-ROUTINE-CONTROLLER.md); the rest of this README describes
+> the upstream dashboard this fork is based on. Changes: [MODIFICATIONS.md](MODIFICATIONS.md).
+
 ---
 
 ## Overview
